@@ -14,13 +14,13 @@ interface Driver {
 const ManageUsers = () => {
   const navigate = useNavigate();
   const { userType } = useParams();
-  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [users, setUsers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (
       userType !== "admins" &&
-      userType !== "drivers" &&
+      userType !== "users" &&
       userType !== "vendors"
     ) {
       navigate("/404", { replace: true });
@@ -35,7 +35,7 @@ const ManageUsers = () => {
 
     adminApiClient
       .get("/users", { params: { type } })
-      .then((response) => setDrivers(response.data))
+      .then((response) => setUsers(response.data))
       .catch((error) =>
         toast.error(error.response?.data?.message || error.message)
       )
@@ -56,9 +56,7 @@ const ManageUsers = () => {
       if (!confirm) return;
 
       await adminApiClient.delete(`/user/${userId}`);
-      setDrivers((drivers) =>
-        drivers.filter((driver) => driver._id !== userId)
-      );
+      setUsers((users) => users.filter((user) => user._id !== userId));
       toast.success("Driver deleted successfully");
     } catch (error: any) {
       toast.error(
@@ -90,26 +88,26 @@ const ManageUsers = () => {
                 Loading...
               </td>
             </tr>
-          ) : drivers.length === 0 ? (
+          ) : users.length === 0 ? (
             <tr>
               <td colSpan={4} className="text-center">
-                No drivers found
+                No users found
               </td>
             </tr>
           ) : (
-            drivers.map((driver) => (
-              <tr key={driver._id}>
-                <td>{driver.name}</td>
-                <td>{driver.mobile}</td>
-                <td>{driver.address}</td>
-                <td>{driver.drivingLicense}</td>
+            users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.mobile}</td>
+                <td>{user.address}</td>
+                <td>{user.drivingLicense}</td>
                 <td className="join">
-                  <Link to={`edit/${driver._id}`} className="btn join-item">
+                  <Link to={`edit/${user._id}`} className="btn join-item">
                     Edit
                   </Link>
                   <button
                     className="btn btn-error text-white join-item"
-                    onClick={() => handleDeleteUser(driver._id)}
+                    onClick={() => handleDeleteUser(user._id)}
                   >
                     Delete
                   </button>
