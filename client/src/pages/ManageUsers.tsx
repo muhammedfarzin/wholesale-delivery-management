@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import adminApiClient from "../adminApiClient";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 interface Driver {
   _id: string;
@@ -11,20 +11,44 @@ interface Driver {
   drivingLicense: string;
 }
 
-const ManageDrivers = () => {
+const ManageUsers = () => {
+  const navigate = useNavigate();
+  const { userType } = useParams();
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (
+      userType !== "admins" &&
+      userType !== "drivers" &&
+      userType !== "vendors"
+    ) {
+      navigate("/404", { replace: true });
+    }
+  }, [userType]);
+
+  useEffect(() => {
     setLoading(true);
+
+    const type =
+      userType === "drivers" ? "truck_driver" : userType?.slice(0, -1);
+
     adminApiClient
-      .get("/users", { params: { type: "truck_driver" } })
+      .get("/users", { params: { type } })
       .then((response) => setDrivers(response.data))
       .catch((error) =>
         toast.error(error.response?.data?.message || error.message)
       )
       .finally(() => setLoading(false));
   }, []);
+
+  const fetchTableHeadings = () => {
+    if (userType === "admins") return ["username", "name", "mobile"];
+    if (userType === "drivers")
+      return ["name", "mobile", "address", "Driving Lisence"];
+    if (userType === "vendors") return ["name", "mobile", "address"];
+    return [];
+  };
 
   const handleDeleteUser = async (userId: string) => {
     try {
@@ -37,7 +61,9 @@ const ManageDrivers = () => {
       );
       toast.success("Driver deleted successfully");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(
+        error.response?.data?.message || error.response.message || error.message
+      );
     }
   };
 
@@ -51,10 +77,9 @@ const ManageDrivers = () => {
       <table className="table max-w-5xl m-auto">
         <thead>
           <tr>
-            <td>Name</td>
-            <td>Mobile</td>
-            <td>Address</td>
-            <td>Driving Lisence</td>
+            {fetchTableHeadings().map((value) => (
+              <td className="capitalize">{value}</td>
+            ))}
             <td>Actions</td>
           </tr>
         </thead>
@@ -98,4 +123,4 @@ const ManageDrivers = () => {
   );
 };
 
-export default ManageDrivers;
+export default ManageUsers;

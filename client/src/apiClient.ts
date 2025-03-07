@@ -3,7 +3,7 @@ import store from "./redux/store";
 import { logout } from "./redux/reducers/auth";
 
 const apiClient = axios.create({
-  baseURL: "/",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("driverRefreshToken");
         if (!refreshToken) return store.dispatch(logout({ role: "driver" }));
-        const response = await axios.post("/auth/refresh", {
+        const response = await axios.post("/api/auth/refresh", {
           token: refreshToken,
         });
         const newAccessToken = response.data.tokens.accessToken;

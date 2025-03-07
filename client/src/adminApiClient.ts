@@ -3,7 +3,7 @@ import store from "./redux/store";
 import { logout } from "./redux/reducers/auth";
 
 const adminApiClient = axios.create({
-  baseURL: "/admin",
+  baseURL: "/api/admin",
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,7 +33,7 @@ adminApiClient.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("adminRefreshToken");
         if (!refreshToken) return store.dispatch(logout({ role: "admin" }));
-        const response = await axios.post("/auth/refresh", {
+        const response = await axios.post("/api/auth/refresh", {
           token: refreshToken,
         });
         const newAccessToken = response.data.tokens.accessToken;

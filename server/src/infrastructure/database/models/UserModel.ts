@@ -5,11 +5,12 @@ export type UserType = {
   name: string;
   mobile: string;
   password: string;
-  role: "admin" | "truck_driver";
+  role: "admin" | "truck_driver" | "vendor";
   username?: string;
   address?: string;
   drivingLicense?: string;
 } & (
+  | { role: "vendor"; address: string }
   | { role: "truck_driver"; address: string; drivingLicense: string }
   | {
       role: "admin";
@@ -44,7 +45,7 @@ const userSchema = new Schema<UserType>(
     },
     role: {
       type: String,
-      enum: ["admin", "truck_driver"],
+      enum: ["admin", "truck_driver", "vendor"],
       required: true,
     },
     address: {

@@ -4,15 +4,16 @@ import adminApiClient from "../adminApiClient";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface FormDataType {
+  username?: string;
   name?: string;
   mobile?: string;
   drivingLicense?: string;
   address?: string;
 }
 
-const DriverForm = () => {
+const UserForm: React.FC = () => {
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { userId, userType } = useParams();
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     mobile: "",
@@ -22,29 +23,35 @@ const DriverForm = () => {
   const [loading, setLoading] = useState<string | null>(null);
 
   useEffect(() => {
+    if (
+      userType !== "admins" &&
+      userType !== "drivers" &&
+      userType !== "vendors"
+    ) {
+      navigate("/404", { replace: true });
+      return;
+    }
+
     adminApiClient.get(`/user/${userId}`).then((response) => {
       setFormData(response.data);
     });
-  }, [userId]);
+  }, [userId, userType]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading("Adding...");
 
-    const { name, mobile, drivingLicense, address } = formData;
+    const { username, name, mobile, drivingLicense, address } = formData;
     const mobileRegex = /^[6-9]\d{9}$/;
-    console.log(
-      name?.trim(),
-      mobile?.trim(),
-      drivingLicense?.trim(),
-      address?.trim()
-    );
+
     try {
       if (
         !name?.trim() ||
         !mobile?.trim() ||
-        !drivingLicense?.trim() ||
-        !address?.trim()
+        (userType === "drivers" && !drivingLicense?.trim()) ||
+        ((userType === "drivers" || userType === "vendors") &&
+          !address?.trim()) ||
+        (userType === "admin" && !username?.trim())
       ) {
         toast.error("All fields are required.");
         return;
@@ -55,11 +62,14 @@ const DriverForm = () => {
         return;
       }
 
+      const role =
+        userType === "drivers" ? "truck_driver" : userType?.slice(0, -1);
+
       const response = await (userId
         ? adminApiClient.put
         : adminApiClient.post)("/user", {
         ...formData,
-        role: "truck_driver",
+        role,
         userId,
       });
       toast.success(response.data?.message || "Driver added successfully.");
@@ -82,7 +92,20 @@ const DriverForm = () => {
       className="flex flex-col gap-2 max-w-md m-auto"
       onSubmit={handleSubmit}
     >
-      <h1 className="text-center text-xl font-bold">Add Driver</h1>
+      <h1 className="text-center text-xl font-bold capitalize">
+        Add {userType}
+      </h1>
+      {userType === "admins" && (
+        <input
+          className="input w-full"
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleOnChange}
+        />
+      )}
       <input
         className="input w-full"
         type="text"
@@ -101,15 +124,17 @@ const DriverForm = () => {
         value={formData.mobile}
         onChange={handleOnChange}
       />
-      <input
-        className="input w-full"
-        type="text"
-        id="drivingLicense"
-        name="drivingLicense"
-        placeholder="Driving License"
-        value={formData.drivingLicense}
-        onChange={handleOnChange}
-      />
+      {userType === "drivers" && (
+        <input
+          className="input w-full"
+          type="text"
+          id="drivingLicense"
+          name="drivingLicense"
+          placeholder="Driving License"
+          value={formData.drivingLicense}
+          onChange={handleOnChange}
+        />
+      )}
       <textarea
         className="textarea w-full"
         id="address"
@@ -125,4 +150,4 @@ const DriverForm = () => {
   );
 };
 
-export default DriverForm;
+export default UserForm;

@@ -8,7 +8,7 @@ export const createUser: RequestHandler = async (req, res, next) => {
     const { name, username, mobile, drivingLicense, address, role } =
       req.body as Partial<UserType>;
 
-    if (role !== "admin" && role !== "truck_driver") {
+    if (role !== "admin" && role !== "truck_driver" && role !== "vendor") {
       throw new HttpError(400, "Invalid Role");
     } else if (
       !name ||
@@ -72,7 +72,12 @@ export const fetchUsers: RequestHandler = async (req, res, next) => {
   try {
     const { type } = req.query as Partial<Record<string, string>>;
 
-    if (type !== undefined && type !== "admin" && type !== "truck_driver") {
+    if (
+      type !== undefined &&
+      type !== "admin" &&
+      type !== "truck_driver" &&
+      type !== "vendor"
+    ) {
       throw new HttpError(400, "Invalid user type");
     }
 
