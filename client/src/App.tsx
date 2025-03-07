@@ -5,6 +5,8 @@ import AdminHome from "./pages/AdminHome";
 import UserForm from "./pages/UserForm";
 import PageNotFound from "./pages/PageNotFound";
 import ManageUsers from "./pages/ManageUsers";
+import ManageInventories from "./pages/ManageInventories";
+import InventoryForm from "./pages/InventoryForm";
 
 function App() {
   return (
@@ -15,8 +17,13 @@ function App() {
       <Route path="admin" element={<AdminProtectedRoute />}>
         <Route index element={<AdminHome />} />
         <Route path=":userType" element={<ManageUsers />} />
+        <Route path="products" element={<ManageInventories />} />
+
         <Route path=":userType/add" element={<UserForm />} />
         <Route path=":userType/edit/:userId" element={<UserForm />} />
+
+        <Route path="products/add" element={<InventoryForm />} />
+        <Route path="products/edit/:productId" element={<InventoryForm />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

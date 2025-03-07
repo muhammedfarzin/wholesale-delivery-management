@@ -20,7 +20,7 @@ const ManageUsers = () => {
   useEffect(() => {
     if (
       userType !== "admins" &&
-      userType !== "users" &&
+      userType !== "drivers" &&
       userType !== "vendors"
     ) {
       navigate("/404", { replace: true });
@@ -37,7 +37,11 @@ const ManageUsers = () => {
       .get("/users", { params: { type } })
       .then((response) => setUsers(response.data))
       .catch((error) =>
-        toast.error(error.response?.data?.message || error.message)
+        toast.error(
+          error.response?.data?.message ||
+            error.response?.message ||
+            error.message
+        )
       )
       .finally(() => setLoading(false));
   }, []);
@@ -68,8 +72,8 @@ const ManageUsers = () => {
   return (
     <div>
       <div className="flex justify-end">
-        <Link to="add" className="btn btn-primary">
-          Add Driver
+        <Link to="add" className="btn btn-primary capitalize">
+          Add {userType}
         </Link>
       </div>
       <table className="table max-w-5xl m-auto">

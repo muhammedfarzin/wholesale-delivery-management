@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { UserModel, UserType } from "../database/models/UserModel";
 import bcrypt from "bcryptjs";
 
@@ -53,7 +54,7 @@ class UserRepository {
     const user = await UserModel.findByIdAndUpdate(userId, data, { new: true });
   };
 
-  findById = async (userId: string) => {
+  findById = async (userId: string | Types.ObjectId) => {
     const user = await UserModel.findById(userId, { password: 0 });
     return user?.toObject();
   };
