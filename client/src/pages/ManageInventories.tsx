@@ -7,6 +7,7 @@ interface ProductType {
   _id: string;
   name: string;
   price: string;
+  image: string;
   category: string;
   vendor: {
     _id: string;
@@ -35,6 +36,10 @@ const ManageInventories = () => {
   }, []);
 
   const handleDeleteProduct = (productId: string) => {
+    const confirmDelete = confirm("Do you really want to delete this product?");
+
+    if (!confirmDelete) return;
+
     adminApiClient
       .delete(`/product/${productId}`)
       .then(() =>
@@ -61,6 +66,7 @@ const ManageInventories = () => {
       <table className="table max-w-5xl m-auto">
         <thead>
           <tr>
+            <td>Image</td>
             <td>Name</td>
             <td>Price</td>
             <td>Category</td>
@@ -84,6 +90,13 @@ const ManageInventories = () => {
           ) : (
             products.map((product) => (
               <tr key={product._id} className="capitalize">
+                <td>
+                  <img
+                    src={product.image}
+                    alt="product"
+                    className="w-30 rounded-xl bg-white border-white"
+                  />
+                </td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.category}</td>

@@ -11,6 +11,8 @@ router.get("/user/:userId", adminController.fetchUserData);
 router.delete("/user/:userId", adminController.deleteUser);
 
 router.post("/product", productController.addProduct);
+router.put("/product/:productId", productController.updateProduct);
+router.delete("/product/:productId", productController.deleteProduct);
 router.get("/products", productController.fetchAllProducts);
 router.get("/product/:productId", productController.fetchProductDetails);
 

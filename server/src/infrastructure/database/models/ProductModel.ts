@@ -4,6 +4,7 @@ export interface ProductType {
   name: string;
   price: number;
   category: string;
+  image: string;
   vendorId: Types.ObjectId;
 }
 
@@ -18,6 +19,10 @@ const productSchema = new Schema<ProductType>(
       requried: true,
     },
     category: {
+      type: String,
+      required: true,
+    },
+    image: {
       type: String,
       required: true,
     },

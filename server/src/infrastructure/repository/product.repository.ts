@@ -1,13 +1,48 @@
-import { isObjectIdOrHexString, type RootFilterQuery } from "mongoose";
+import { isObjectIdOrHexString } from "mongoose";
 import { ProductModel, ProductType } from "../database/models/ProductModel";
-import { userRepository } from "./user.repository";
 import { HttpError } from "../errors/HttpError";
+import {
+  removeFromCloudinary,
+  uploadToCloudinary,
+} from "../../application/services/cloudinary.service";
 
 class ProductRepository {
   async addProduct(data: ProductType) {
-    const product = new ProductModel(data);
+    const imageUrl = await uploadToCloudinary(data.image, "products");
+
+    const product = new ProductModel({ ...data, image: imageUrl });
     const newProduct = await product.save();
     return newProduct;
+  }
+
+  async updateProduct(productId: string, data: Partial<ProductType>) {
+    if (!isObjectIdOrHexString(productId))
+      throw new HttpError(400, "Invalid productId");
+
+    const product = await ProductModel.findById(productId);
+    console.log(product, productId);
+    if (!product) throw new HttpError(404, "Product not found");
+
+    if (data.image) {
+      var imageUrl: string | undefined = await uploadToCloudinary(
+        data.image,
+        "products"
+      );
+      var existImageUrl: string | undefined = product.image;
+    }
+
+    await product.updateOne({ ...data, image: imageUrl });
+
+    if (data.image && existImageUrl) {
+      await removeFromCloudinary(existImageUrl);
+    }
+  }
+
+  async deleteProduct(productId: string) {
+    if (!isObjectIdOrHexString(productId))
+      throw new HttpError(400, "Invalid productId");
+
+    await ProductModel.findByIdAndDelete(productId);
   }
 
   async fetchProducts() {
