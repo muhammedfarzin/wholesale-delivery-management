@@ -6,6 +6,9 @@ export type UserType = {
   mobile: string;
   password: string;
   role: "admin" | "truck_driver";
+  username?: string;
+  address?: string;
+  drivingLicense?: string;
 } & (
   | { role: "truck_driver"; address: string; drivingLicense: string }
   | {

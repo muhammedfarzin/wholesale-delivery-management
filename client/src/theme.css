@@ -1,0 +1,11 @@
+:root {
+  --primary: 0 0% 21%;
+  --secondary: 0 0% 13%;
+  --background: 0 0% 12%;
+  --foreground: 0 0% 100%;
+  --input: 0 0% 21%;
+  --selection: 0 0% 10%;
+  --border: 0 0% 18%;
+  --destructive: 0 70% 35%;
+  --form-box: 0 0% 31%;
+}
