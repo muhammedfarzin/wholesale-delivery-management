@@ -44,3 +44,40 @@ export const placeOrder: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateStatus: RequestHandler = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const { userId, role } = req.user!;
+
+    if (typeof status !== "string") {console.log(typeof status)
+      throw new HttpError(400, "Status must be in string");
+    } else if (status !== "delivered" && status !== "cancelled") {
+      throw new HttpError(400, "Invalid status");
+    }
+
+    await orderRepository.updateStatus(
+      orderId,
+      status,
+      role,
+      userId.toString()
+    );
+
+    res.status(200).json({ message: "Status updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const fetchOrders: RequestHandler = async (req, res, next) => {
+  try {
+    const { role, userId } = req.user!;
+
+    const orders = await orderRepository.fetchOrders(role, userId);
+
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};

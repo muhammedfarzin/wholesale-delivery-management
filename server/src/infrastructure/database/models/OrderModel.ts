@@ -6,29 +6,38 @@ interface OrderType {
   address: string;
   count: number;
   price: number;
+  status: "pending" | "delivered" | "cancelled";
 }
 
-const orderSchema = new Schema<OrderType>({
-  orderedBy: {
-    type: Schema.Types.ObjectId,
-    required: true,
+const orderSchema = new Schema<OrderType>(
+  {
+    orderedBy: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    productId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    count: {
+      type: Number,
+      default: 1,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      default: "pending",
+      enum: ["pending", "delivered", "cancelled"],
+    },
   },
-  productId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-  count: {
-    type: Number,
-    default: 1,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 export const OrderModel = model("Order", orderSchema, "orders");

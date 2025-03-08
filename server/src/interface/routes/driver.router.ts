@@ -7,5 +7,7 @@ const router = Router();
 router.get("/products", productController.fetchAllProducts);
 
 router.post("/place-order", orderController.placeOrder);
+router.put("/order/:orderId/status", orderController.updateStatus);
+router.get("/orders", orderController.fetchOrders);
 
 export { router as driverRouter };

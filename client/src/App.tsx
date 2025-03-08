@@ -10,6 +10,7 @@ import InventoryForm from "./pages/InventoryForm";
 import DriverProtectedRouter from "./components/DriverProtectedRouter";
 import DriverHome from "./pages/DriverHome";
 import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <Route path="/" element={<DriverProtectedRouter />}>
         <Route index element={<DriverHome />} />
         <Route path="cart" element={<Cart />} />
+        <Route path="orders" element={<Orders type="driver" />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
