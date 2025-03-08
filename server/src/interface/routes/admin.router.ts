@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as adminController from "../controllers/admin.controller";
 import * as productController from "../controllers/product.controller";
+import * as orderController from "../controllers/order.controller";
 
 const router = Router();
 
@@ -15,5 +16,8 @@ router.put("/product/:productId", productController.updateProduct);
 router.delete("/product/:productId", productController.deleteProduct);
 router.get("/products", productController.fetchAllProducts);
 router.get("/product/:productId", productController.fetchProductDetails);
+
+router.put("/order/:orderId/status", orderController.updateStatus);
+router.get("/orders", orderController.fetchOrders);
 
 export { router as adminRouter };

@@ -28,6 +28,8 @@ function App() {
 
         <Route path="products/add" element={<InventoryForm />} />
         <Route path="products/edit/:productId" element={<InventoryForm />} />
+
+        <Route path="orders" element={<Orders type="admin" />} />
       </Route>
 
       <Route path="/" element={<DriverProtectedRouter />}>

@@ -37,7 +37,7 @@ const Orders: React.FC<OrderProps> = ({ type }) => {
   useEffect(() => {
     setLoading("Loading...");
     (type === "driver" ? apiClient : adminApiClient)
-      .get(`/${type}/orders`)
+      .get(`${type === "driver" ? type : ""}/orders`)
       .then((response) => setOrders(response.data))
       .catch((error) =>
         toast.error(
@@ -55,7 +55,9 @@ const Orders: React.FC<OrderProps> = ({ type }) => {
     setLoading("Updating...");
 
     (type === "driver" ? apiClient : adminApiClient)
-      .put(`/${type}/order/${orderId}/status`, { status })
+      .put(`${type === "driver" ? type : ""}/order/${orderId}/status`, {
+        status,
+      })
       .then(() => {
         setOrders((orders) =>
           orders.map((order) => {
@@ -124,6 +126,9 @@ const Orders: React.FC<OrderProps> = ({ type }) => {
                 >
                   {order.status}
                 </td>
+
+                {type === "admin" && <td>{order.orderedBy.name}</td>}
+
                 {order.status === "pending" && (
                   <td className="join">
                     <button

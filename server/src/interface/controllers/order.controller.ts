@@ -51,7 +51,8 @@ export const updateStatus: RequestHandler = async (req, res, next) => {
     const { status } = req.body;
     const { userId, role } = req.user!;
 
-    if (typeof status !== "string") {console.log(typeof status)
+    if (typeof status !== "string") {
+      console.log(typeof status);
       throw new HttpError(400, "Status must be in string");
     } else if (status !== "delivered" && status !== "cancelled") {
       throw new HttpError(400, "Invalid status");
