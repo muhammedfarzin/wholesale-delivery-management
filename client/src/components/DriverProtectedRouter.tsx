@@ -32,12 +32,9 @@ const DriverProtectedRouter: React.FC = () => {
             ) : null}
           </div>
 
-          <button
-            className="btn btn-primary text-white"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </button>
+          <Link to="/orders" className="btn btn-primary">
+            Orders
+          </Link>
           <button
             className="btn btn-error text-white"
             onClick={() => dispatch(logout({ role: "driver" }))}
@@ -46,7 +43,7 @@ const DriverProtectedRouter: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="mt-10 ">
+      <div className="mt-10">
         <Outlet />
       </div>
     </div>
