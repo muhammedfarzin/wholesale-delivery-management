@@ -26,13 +26,13 @@ const Login: React.FC<LoginProps> = ({ type }) => {
 
   const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    setLoading("Logging in...");
-    if (!username.trim()) return toast.error("Username is required");
-    else if (!password.trim()) return toast.error("Password is required");
-
-    const role = type === "admin" ? "admin" : "truck_driver";
-
     try {
+      setLoading("Logging in...");
+      if (!username.trim()) return toast.error("Username is required");
+      else if (!password.trim()) return toast.error("Password is required");
+
+      const role = type === "admin" ? "admin" : "truck_driver";
+
       const response = await apiClient.post(`/auth/login`, {
         username,
         password,

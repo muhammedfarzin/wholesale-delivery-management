@@ -7,6 +7,8 @@ import PageNotFound from "./pages/PageNotFound";
 import ManageUsers from "./pages/ManageUsers";
 import ManageInventories from "./pages/ManageInventories";
 import InventoryForm from "./pages/InventoryForm";
+import DriverProtectedRouter from "./components/DriverProtectedRouter";
+import DriverHome from "./pages/DriverHome";
 
 function App() {
   return (
@@ -24,6 +26,10 @@ function App() {
 
         <Route path="products/add" element={<InventoryForm />} />
         <Route path="products/edit/:productId" element={<InventoryForm />} />
+      </Route>
+
+      <Route path="/" element={<DriverProtectedRouter />}>
+        <Route index element={<DriverHome />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

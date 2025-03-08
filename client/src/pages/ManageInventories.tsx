@@ -2,18 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import adminApiClient from "../adminApiClient";
 import { toast } from "react-toastify";
-
-interface ProductType {
-  _id: string;
-  name: string;
-  price: string;
-  image: string;
-  category: string;
-  vendor: {
-    _id: string;
-    name: string;
-  };
-}
+import { ProductType } from "../types";
 
 const ManageInventories = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
