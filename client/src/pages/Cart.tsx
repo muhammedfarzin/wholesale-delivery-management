@@ -18,7 +18,7 @@ const Cart: React.FC = () => {
     try {
       setLoading("Processing...");
 
-      if (!address.trim()) {
+      if (!address.trim() || !/[a-z]|[A-Z]/.test(address)) {
         return toast.error("Please enter address");
       } else if (!products.length) {
         return toast.error("No product found in the cart");

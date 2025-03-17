@@ -1,20 +1,14 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { logout } from "../redux/reducers/auth";
 
 const DriverProtectedRouter: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const driver = useSelector((state: RootState) => state.auth.driver);
   const cartCount = useSelector((state: RootState) => state.cart.count);
 
-  useEffect(() => {
-    if (!driver) navigate("/login", { replace: true });
-  }, [driver]);
-
-  return (
+  return driver ? (
     <div className="w-screen p-4">
       <div className="flex items-center justify-between">
         <Link to="/" className="text-lg font-bold">
@@ -47,6 +41,8 @@ const DriverProtectedRouter: React.FC = () => {
         <Outlet />
       </div>
     </div>
+  ) : (
+    <Navigate to="/login" replace />
   );
 };
 

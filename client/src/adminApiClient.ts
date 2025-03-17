@@ -49,7 +49,7 @@ adminApiClient.interceptors.response.use(
         if (
           responseError.response?.data?.message === "Refresh token is required."
         ) {
-          store.dispatch(logout({ role: "admin" }));
+          store.dispatch(logout({ role: "admin", force: true }));
           return Promise.reject(
             new AxiosError(
               "Your session session has been expired",

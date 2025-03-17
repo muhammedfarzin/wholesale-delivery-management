@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/store";
-import { useEffect } from "react";
 import { logout } from "../redux/reducers/auth";
 
 const AdminProtectedRoute = () => {
@@ -9,11 +8,7 @@ const AdminProtectedRoute = () => {
   const dispatch = useDispatch();
   const admin = useSelector((state: RootState) => state.auth.admin);
 
-  useEffect(() => {
-    if (!admin) navigate("/admin/login", { replace: true });
-  }, [admin]);
-
-  return (
+  return admin ? (
     <div className="w-screen p-4">
       <div className="flex items-center justify-between">
         <Link to="/admin" className="text-lg font-bold">
@@ -38,6 +33,8 @@ const AdminProtectedRoute = () => {
         <Outlet />
       </div>
     </div>
+  ) : (
+    <Navigate to="/admin/login" replace />
   );
 };
 

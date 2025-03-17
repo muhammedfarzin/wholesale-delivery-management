@@ -37,11 +37,16 @@ const authSlice = createSlice({
         state.driver = true;
       }
     },
-    logout: (state, action: PayloadAction<{ role: "admin" | "driver" }>) => {
-      const { role } = action.payload;
+    logout: (
+      state,
+      action: PayloadAction<{ role: "admin" | "driver"; force?: boolean }>
+    ) => {
+      const { role, force } = action.payload;
 
-      const confirmed = window.confirm("Are you sure you want to logout?");
-      if (!confirmed) return;
+      if (force) {
+        const confirmed = window.confirm("Are you sure you want to logout?");
+        if (!confirmed) return;
+      }
 
       if (role === "driver") {
         state.driver = false;

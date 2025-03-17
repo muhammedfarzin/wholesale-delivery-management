@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import apiClient from "../apiClient";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser, TokensState } from "../redux/reducers/auth";
 import { RootState } from "../redux/store";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 interface LoginProps {
   type: "admin" | "driver";
@@ -12,17 +12,10 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ type }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const authData = useSelector((state: RootState) => state.auth);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (authData[type]) {
-      navigate(type === "admin" ? "/admin" : "/", { replace: true });
-    }
-  }, [authData]);
 
   const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -49,7 +42,7 @@ const Login: React.FC<LoginProps> = ({ type }) => {
     }
   };
 
-  return (
+  return !authData[type] ? (
     <div className="m-2 h-screen flex justify-center items-center">
       <form
         className="w-full max-w-md bg-sky-500 text-center p-4 rounded-md flex flex-col gap-2"
@@ -79,6 +72,8 @@ const Login: React.FC<LoginProps> = ({ type }) => {
         </button>
       </form>
     </div>
+  ) : (
+    <Navigate to={type === "admin" ? "/admin" : "/"} replace />
   );
 };
 

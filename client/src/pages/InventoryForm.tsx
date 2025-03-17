@@ -161,10 +161,12 @@ const InventoryForm = () => {
         hidden
         accept="image/*"
         value={[]}
-        onChange={(e) =>
-          e.target.files &&
-          setFormData({ ...formData, image: e.target.files[0] })
-        }
+        onChange={(e) => {
+          if (e.target.files && !e.target.files[0].type.startsWith("image"))
+            toast.error("Invalid image type");
+          else if (e.target.files)
+            setFormData({ ...formData, image: e.target.files[0] });
+        }}
       />
 
       <select
